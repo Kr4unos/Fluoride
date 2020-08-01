@@ -1,0 +1,10 @@
+.table-custom th, .table-custom td {
+    vertical-align: middle;
+    white-space: normal;
+}
+
+.seasonDownloaded:hover,
+.seasonSeen:hover {
+    cursor: pointer;
+    color: #27476e;
+}

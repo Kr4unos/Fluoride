@@ -1,0 +1,112 @@
+{% extends 'includes/base.html.twig' %}
+{% block header %}{% endblock %}
+{% block body %}
+    <div class="row py-7">
+        <div class="col-xl-3">
+            <img class="img-thumbnail"  src="{{ asset('uploads/movies/' ~ movie.poster) }}" alt="{{ movie.title }}" height="400px" width="100%">
+            <p class="small text-center"><a target="_blank" href="https://www.imdb.com/title/{{ movie.getImdbId() }}/">View on IMDB</a></p>
+            <table class="table table-hover text-center">
+                <tr>
+                    <td class="font-weight-bold">IMDB</td>
+                    <td>{{ movie.getImdbRating() }}/10</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Watched</td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="seenCheckbox" type="checkbox" {% if movie.seen %}checked{% endif %}>
+                            <label class="custom-control-label" for="seenCheckbox"></label>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xl-9">
+            <h1 class="title">{{ movie.getTitle() }}</h1>
+            <div class="table-responsive table-custom">
+                <table class="table table-hover">
+                    <tr>
+                        <td class="font-weight-bold">Plot</td>
+                        <td>{{ movie.getOverview()|nl2br }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">English title</td>
+                        <td><a href="{{ path('movies', {'query': movie.getOriginalTitle()}) }}">{{ movie.getOriginalTitle() }}</a></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Rated</td>
+                        <td>{{ movie.getRated() }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Release date</td>
+                        <td>{{ movie.getReleaseDate()|date('d M Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Runtime</td>
+                        <td>{{ movie.getRuntime() }} min</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Genre</td>
+                        <td>
+                            {% for genre in movie.getGenre()|split(', ') %}
+                                <a href="{{ path('search', {'query': genre })}}">{{ genre }}</a>{% if loop.last %}.{% else %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Director</td>
+                        <td><a href="{{ path('search', {'query': movie.getDirector() }) }}">{{ movie.getDirector() }}</a></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Writer</td>
+                        <td>{{ movie.getWriter() }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Actors</td>
+                        <td>
+                            {% for actor in movie.getActors()|split(', ') %}
+                                <a href="{{ path('search', {'query': actor })}}">{{ actor }}</a>{% if loop.last %}.{% else %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Production</td>
+                        <td><a href="{{ path('search', {'query': movie.getProduction()}) }}">{{ movie.getProduction() }}</a></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Awards</td>
+                        <td>{{ movie.getAwards() }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Language</td>
+                        <td>{{ movie.getLanguage() }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Country</td>
+                        <td>{{ movie.getCountry() }}</td>
+                    </tr>
+                    {% if movie.getComments() is not empty %}
+                        <tr>
+                            <td class="font-weight-bold">Comments</td>
+                            <td>{{ movie.getComments()|nl2br }}</td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('#seenCheckbox:checkbox').change(function () {
+            $.ajax({
+                type : "GET",
+                url : Routing.generate("ajax-seen-movie", {
+                    id: {{ movie.id }}
+                }),
+                success: function(data) {}
+            });
+        });
+    </script>
+{% endblock %}

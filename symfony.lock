@@ -84,6 +84,27 @@
     "egulias/email-validator": {
         "version": "2.1.18"
     },
+    "friendsofsymfony/jsrouting-bundle": {
+        "version": "2.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.3",
+            "ref": "a9f2e49180f75cdc71ae279a929c4b2e0638de84"
+        },
+        "files": [
+            "./config/routes/fos_js_routing.yaml"
+        ]
+    },
+    "guzzlehttp/guzzle": {
+        "version": "6.5.5"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.6.1"
+    },
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
@@ -123,11 +144,20 @@
     "psr/event-dispatcher": {
         "version": "1.0.0"
     },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
     "psr/link": {
         "version": "1.0.0"
     },
     "psr/log": {
         "version": "1.1.3"
+    },
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
+    },
+    "rooxie/omdb": {
+        "version": "0.3.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
@@ -510,13 +540,22 @@
     "twig/extra-bundle": {
         "version": "v3.0.4"
     },
+    "twig/string-extra": {
+        "version": "v3.0.4"
+    },
     "twig/twig": {
         "version": "v3.0.4"
+    },
+    "vfalies/tmdb": {
+        "version": "1.8.3"
     },
     "webimpress/safe-writer": {
         "version": "2.0.1"
     },
     "webmozart/assert": {
         "version": "1.9.1"
+    },
+    "willdurand/jsonp-callback-validator": {
+        "version": "v1.1.0"
     }
 }

@@ -1,0 +1,200 @@
+{% extends 'includes/base.html.twig' %}
+{% block header %}{% endblock %}
+{% block body %}
+    <div class="row py-7">
+        <div class="col-xl-3">
+            <img class="img-thumbnail"  src="{{ asset('uploads/shows/' ~ show.getPoster()) }}" alt="{{ show.getName() }}" height="400px" width="100%">
+            <p class="small text-center"><a target="_blank" href="https://www.imdb.com/title/{{ show.getImdbId() }}/">Voir sur IMDb</a></p>
+            <div class="table-responsive">
+                <table class="table table-hover text-center">
+                    <tr>
+                        <td class="font-weight-bold">Note</td>
+                        <td>{{ show.getImdbRating() }}/10</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Status</td>
+                        <td>{{ show.getStatus() }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-6 col-sm-6">
+            <h1 class="title">
+                {{ show.getName() }}
+                {% if show.getSeen() %}
+                    <i class="material-icons ml-2" style="font-size: 32px;" title="Regardé complètement">visibility</i>
+                {% endif %}
+                {% if show.getDownloaded() %}
+                    <i class="material-icons ml-2" style="font-size: 32px;" title="Téléchargé complètement">cloud_download</i>
+                {% endif %}
+            </h1>
+            <div class="table-responsive table-custom">
+                <table class="table table-hover">
+                    <tr>
+                        <td class="font-weight-bold">Saisons</td>
+                        <td>{{ show.getSeasons()|length }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Synopsis</td>
+                        <td>{{ show.getOverview()|nl2br }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Classé</td>
+                        <td>{{ show.getRated() }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Date de sortie</td>
+                        <td>{{ show.getReleaseDate()|date('d M Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Durée</td>
+                        <td>{{ show.getEpisodeRuntime() }} min</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Genre</td>
+                        <td>
+                            {% for genre in show.getGenre()|split(', ') %}
+                                <a href="{{ path('search', {'query': genre })}}">{{ genre }}</a>{% if loop.last %}.{% else %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Scénario</td>
+                        <td>{{ show.getWriter() }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Acteurs</td>
+                        <td>
+                            {% for actor in show.getActors()|split(', ') %}
+                                <a href="{{ path('search', {'query': actor })}}">{{ actor }}</a>{% if loop.last %}.{% else %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Distributeur</td>
+                        <td>
+                            {% for network in show.getNetwork()|split(', ') %}
+                                <a href="{{ path('search', {'query': network })}}">{{ network }}</a>{% if loop.last %}.{% else %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Récompenses</td>
+                        <td>{{ show.getAwards() }}</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Langue</td>
+                        <td>{{ show.getLanguage() }}</td>
+                    </tr>
+                    {% if show.getComments() is not empty %}
+                        <tr>
+                            <td class="font-weight-bold">Comments</td>
+                            <td>{{ show.getComments()|nl2br }}</td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            {% for season in show.getSeasons() %}
+                {% if season.getSeasonNumber() != 0 %}
+                    <div class="d-flex align-items-center pb-2 mb-2" style="border-bottom: 1px solid #d7d7d7;">
+                        <img class="img-thumbnail" src="{{ asset('uploads/shows/seasons/' ~ season.getPoster()) }}" style="width: 150px;">
+                        <div class="ml-2">
+                            <h3 class="title font-weight-bold">{{ season.getName() }} | {{ season.getAirDate()|date('Y') }} | {{ season.getEpisodes()|length }} épisodes</h3>
+                            <p class="text-justify font-italic ">{{ season.getOverview() }}</p>
+                        </div>
+                    </div>
+                    <div class="table-responsive table-custom">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th class="text-center font-weight-bold"><i class="material-icons seasonDownloaded" data-id="{{ season.getId() }}">cloud_download</i></th>
+                                <th class="text-center font-weight-bold"><i class="material-icons seasonSeen" data-id="{{ season.getId() }}">remove_red_eye</i></th>
+                                <th class="text-center font-weight-bold">Aperçu</th>
+                                <th class="text-center font-weight-bold">Titre</th>
+                                <th class="text-center font-weight-bold">Sortie</th>
+                                <th class="text-center font-weight-bold">Note</th>
+                                <th class="text-center font-weight-bold">Synopsis</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for episode in season.episodes %}
+                                <tr>
+                                    <td class="text-center" width="5%">
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input downloadedCheckbox" id="downloadedCheckbox{{ episode.getId() }}" data-season="{{ season.getId() }}" data-id="{{ episode.getId() }}" type="checkbox" {% if episode.getDownloaded() %}checked{% endif %}>
+                                            <label class="custom-control-label" for="downloadedCheckbox{{ episode.getId() }}"></label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center" width="5%">
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input seenCheckbox" id="seenCheckbox{{ episode.getId() }}" data-season="{{ season.getId() }}" data-id="{{ episode.getId() }}" type="checkbox" {% if episode.getSeen() %}checked{% endif %}>
+                                            <label class="custom-control-label" for="seenCheckbox{{ episode.getId() }}"></label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center" width="20%">
+                                        <img class="img-thumbnail"  src="{{ asset('uploads/shows/episodes/' ~ episode.getPoster()) }}" alt="{{ episode.getTitle() }}" style="width: 60%; height: 100px!important; object-fit: cover;">
+                                    </td>
+                                    <td class="text-center" width="15%">{{ episode.getOriginalTitle() }} {% if(episode.getOriginalTitle() != episode.getTitle()) %}({{ episode.getTitle() }}){% endif %}</td>
+                                    <td class="text-center" width="10%">{{ episode.getAirDate()|date('d M Y') }}</td>
+                                    <td class="text-center" width="5%">{% if episode.getRating() != 0 %}{{ episode.getRating()|round(1) }}{% else %}??{% endif %}</td>
+                                    <td class="text-justify" width="40%">{{ episode.getOverview() }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('.seenCheckbox:checkbox').change(function () {
+            $.ajax({
+                type : "GET",
+                url : Routing.generate("ajax-seen-episode", {
+                    id: $(this).attr('data-id')
+                }),
+                success: function(data) {}
+            });
+        });
+
+        $('.downloadedCheckbox:checkbox').change(function () {
+            $.ajax({
+                type : "GET",
+                url : Routing.generate("ajax-downloaded-episode", {
+                    id: $(this).attr('data-id')
+                }),
+                success: function(data) {}
+            });
+        });
+
+        $('.seasonSeen').on('click', function () {
+            $.ajax({
+                type : "GET",
+                url : Routing.generate("ajax-seen-season", {
+                    id: $(this).attr('data-id')
+                }),
+                success: function(data) {
+                    location.reload();
+                }
+            });
+        });
+
+        $('.seasonDownloaded').on('click', function () {
+            $.ajax({
+                type : "GET",
+                url : Routing.generate("ajax-downloaded-season", {
+                    id: $(this).attr('data-id')
+                }),
+                success: function(data) {
+                    location.reload();
+                }
+            });
+        });
+    </script>
+{% endblock %}

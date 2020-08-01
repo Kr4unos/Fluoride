@@ -1,0 +1,21 @@
+{% for show in shows %}
+    <div class="col-xl-3 d-flex">
+        <div class="card serie-card flex-fill">
+            <a href="{{ path('show', {'id': show.getId()}) }}">
+                <img class="card-img-top" src="{{ asset('uploads/shows/' ~ show.getPoster()) }}" alt="{{ show.getName() }}" height="400px" width="100%">
+            </a>
+            <div class="card-body text-center">
+                <h4 class="title"><a href="{{ path('show', {'id': show.getId() }) }}">{{ show.getName() }}</a> ({{ show.getReleaseDate()|date('Y') }})
+                    {% if show.getSeen() %}
+                        <br/><i class="material-icons ml-2"title="Regardé complètement">visibility</i>
+                    {% endif %}
+                    {% if show.getDownloaded() %}
+                        {% if not show.getSeen() %}<br/>{% endif %}
+                        <i class="material-icons ml-2" title="Téléchargé complètement">cloud_download</i>
+                    {% endif %}</h4>
+                <div class="separator"></div>
+                <p class="card-text">{{ show.getOverview()|u.truncate(200, "...")|raw }}</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}
