@@ -1,0 +1,12 @@
+{% for people in peoples %}
+    <div class="col-xl-3 col-md-4 d-flex">
+        <div class="card movie-card flex-fill">
+            <a href="{{ path('people', {'id': people.getId() }) }}">
+                <img class="card-img-top" src="{{ asset('uploads/people/' ~ people.getProfile()) }}" alt="{{ people.getName() }}" height="400px" width="100%">
+            </a>
+            <div class="card-body text-center">
+                <h4 class="title"><a href="{{ path('people', {'id': people.getId() }) }}">{{ people.getName() }}</a></h4>
+            </div>
+        </div>
+    </div>
+{% endfor %}

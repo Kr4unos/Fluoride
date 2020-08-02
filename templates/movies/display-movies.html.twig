@@ -2,7 +2,7 @@
     <div class="col-xl-3 col-md-4 d-flex">
         <div class="card movie-card flex-fill">
             <a href="{{ path('movie', {'id': movie.getId() }) }}">
-                <img class="card-img-top" src="{{ asset('uploads/movies/' ~ movie.poster) }}" alt="{{ movie.getTitle() }}" height="400px" width="100%">
+                <img class="card-img-top" src="{{ asset('uploads/movies/' ~ movie.getPoster()) }}" alt="{{ movie.getTitle() }}" height="400px" width="100%">
             </a>
             <div class="card-body text-center">
                 <h4 class="title"><a href="{{ path('movie', {'id': movie.getId() }) }}">{{ movie.getTitle()  }}</a> ({{ movie.getReleaseDate()|date('Y') }}) {% if movie.getSeen() %}<br/><i class="material-icons">check</i>{% endif %}</h4>

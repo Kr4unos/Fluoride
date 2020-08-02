@@ -13,6 +13,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.7",
         "friendsofsymfony/jsrouting-bundle": "^2.6",
+        "jwilsson/spotify-web-api-php": "^3.5",
         "phpdocumentor/reflection-docblock": "^5.2",
         "rooxie/omdb": "^0.3.0",
         "sensio/framework-extra-bundle": "^5.1",

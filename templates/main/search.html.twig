@@ -2,37 +2,58 @@
 {% block header %}{% endblock %}
 {% block body %}
     <div class="row py-7">
+        {% if people is not null %}
+        <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <div class="row align-items-center">
+                            <div class="col-xl-2 col-md-2">
+                                <p class="text-center">
+                                    <img class="img-thumbnail" width="128px" height="auto" src="{{ asset('uploads/people/' ~ people.getProfile()) }}" alt="{{ people.getName() }}"/>
+                                </p>
+                                </div>
+                            <div class="col-xl-10 col-md-10">
+                                <h1><a href="{{ path('people', {'id': people.getId() }) }}">{{ people.getName() }}</a></h1>
+                                <p>{{ people.getBiography()|u.truncate(200, "...")|raw }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        {% endif %}
         <div class="col">
             <h1>Results for "{{ query }}"</h1>
         </div>
         <div class="col-xl-12">
             <div class="nav-wrapper">
                 <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link mb-sm-3 mb-md-0 active" id="tab1" data-toggle="tab" href="#movies" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true"><i class="ni ni-tv-2 mr-2"></i>Movies</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link mb-sm-3 mb-md-0" id="tab2" data-toggle="tab" href="#series" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i class="ni ni-button-play mr-2"></i>TV Series</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link mb-sm-3 mb-md-0" id="tab3" data-toggle="tab" href="#games" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false"><i class="ni ni-spaceship mr-2"></i>Games</a>
-                    </li>
+                    {% if movies is not empty %}
+                        <li class="nav-item">
+                            <a class="nav-link mb-sm-3 mb-md-0 active" id="tab1" data-toggle="tab" href="#movies" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true"><i class="ni ni-tv-2 mr-2"></i>Movies</a>
+                        </li>
+                    {% endif %}
+                    {% if shows is not empty %}
+                        <li class="nav-item">
+                            <a class="nav-link mb-sm-3 mb-md-0 {% if movies is empty %}active{% endif %}" id="tab2" data-toggle="tab" href="#shows" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i class="ni ni-button-play mr-2"></i>TV Shows</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="movies" role="tabpanel" aria-labelledby="tab1">
-                    <div class="row">
-                        {% include 'movies/display-movies.html.twig' %}
+                {% if movies is not empty %}
+                    <div class="tab-pane fade show active" id="movies" role="tabpanel" aria-labelledby="tab1">
+                        <div class="row">
+                            {% include 'movies/display-movies.html.twig' %}
+                        </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="series" role="tabpanel" aria-labelledby="tab2">
-                    <div class="row">
-                        {% include 'series/display-series.html.twig' %}
+                {% endif %}
+                {% if shows is not empty %}
+                    <div class="tab-pane fade {% if movies is empty %}show active{% endif %}" id="shows" role="tabpanel" aria-labelledby="tab2">
+                        <div class="row">
+                            {% include 'series/display-series.html.twig' %}
+                        </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="games" role="tabpanel" aria-labelledby="tab3">
-                    <p class="description">Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth.</p>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>

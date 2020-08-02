@@ -3,7 +3,7 @@
 {% block body %}
     <div class="row py-7">
         <div class="col-xl-3">
-            <img class="img-thumbnail"  src="{{ asset('uploads/movies/' ~ movie.poster) }}" alt="{{ movie.title }}" height="400px" width="100%">
+            <img class="img-thumbnail"  src="{{ asset('uploads/movies/' ~ movie.getPoster()) }}" alt="{{ movie.getTitle() }}" height="400px" width="100%">
             <p class="small text-center"><a target="_blank" href="https://www.imdb.com/title/{{ movie.getImdbId() }}/">View on IMDB</a></p>
             <table class="table table-hover text-center">
                 <tr>
@@ -55,7 +55,11 @@
                     </tr>
                     <tr>
                         <td class="font-weight-bold">Director</td>
-                        <td><a href="{{ path('search', {'query': movie.getDirector() }) }}">{{ movie.getDirector() }}</a></td>
+                        <td>
+                            {% for director in movie.getDirector()|split(', ') %}
+                                <a href="{{ path('search', {'query': director })}}">{{ director }}</a>{% if loop.last %}.{% else %}, {% endif %}
+                            {% endfor %}
+                        </td>
                     </tr>
                     <tr>
                         <td class="font-weight-bold">Writer</td>
@@ -94,6 +98,9 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div class="row">
+        {% include 'peoples/display-peoples.html.twig' %}
     </div>
 {% endblock %}
 {% block javascripts %}

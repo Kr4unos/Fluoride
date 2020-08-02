@@ -60,7 +60,11 @@
                     </tr>
                     <tr>
                         <td class="font-weight-bold">Scénario</td>
-                        <td>{{ show.getWriter() }}</td>
+                        <td>
+                            {% for writer in show.getWriter()|split(', ') %}
+                                <a href="{{ path('search', {'query': writer })}}">{{ writer }}</a>{% if loop.last %}.{% else %}, {% endif %}
+                            {% endfor %}
+                        </td>
                     </tr>
                     <tr>
                         <td class="font-weight-bold">Acteurs</td>
@@ -148,6 +152,9 @@
                 {% endif %}
             {% endfor %}
         </div>
+    </div>
+    <div class="row">
+        {% include 'peoples/display-peoples.html.twig' %}
     </div>
 {% endblock %}
 {% block javascripts %}

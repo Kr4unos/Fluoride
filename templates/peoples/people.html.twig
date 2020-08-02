@@ -1,0 +1,87 @@
+{% extends 'includes/base.html.twig' %}
+{% block header %}{% endblock %}
+{% block body %}
+    <div class="row py-7">
+        <div class="col-xl-3">
+            <img class="img-thumbnail"  src="{{ asset('uploads/people/' ~ people.getProfile()) }}" alt="{{ people.getName() }}" height="400px" width="100%">
+            <p class="small text-center"><a target="_blank" href="https://www.imdb.com/name/{{ people.getImdbId() }}/">View on IMDB</a></p>
+            <table class="table table-hover text-center">
+                <tr>
+                    <td class="font-weight-bold">Popularity</td>
+                    <td>{{ people.getPopularity() }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xl-9">
+            <h1 class="title">{{ people.getName() }}</h1>
+            <div class="table-responsive table-custom">
+                <table class="table table-hover">
+                    {% if people.getNicknames() is not empty %}
+                    <tr>
+                        <td class="font-weight-bold">Also known as</td>
+                        <td>{% for name in people.getNicknames()|split(', ') %}{{ name }}{% if loop.last %}.{% else %}, {% endif %}{% endfor %}</td>
+                    </tr>
+                    {% endif %}
+                    {% if people.getBiography() is not empty %}
+                    <tr>
+                        <td class="font-weight-bold">Biography</td>
+                        <td>{{ people.getBiography()|nl2br }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if people.getBirthday() is not empty %}
+                    <tr>
+                        <td class="font-weight-bold">Birthday</td>
+                        <td>{{ people.getBirthday()|date('d M Y') }} ({{ people.getPlaceOfBirth() }})</td>
+                    </tr>
+                    {% endif %}
+                    {% if people.getDeathday() is not null %}
+                        <tr>
+                            <td class="font-weight-bold">Deathday</td>
+                            <td>{{ people.getDeathday()|date('d M Y') }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if people.getGender() != 0 %}
+                    <tr>
+                        <td class="font-weight-bold">Gender</td>
+                        <td><img width="16px" height="16px" src="{{ asset('assets/img/gender/' ~ people.getGender() ~ ".png") }}"></td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="nav-wrapper">
+                <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text" role="tablist">
+                    {% if people.getMovies() is not empty %}
+                    <li class="nav-item">
+                        <a class="nav-link mb-sm-3 mb-md-0 active" id="tab1" data-toggle="tab" href="#movies" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true"><i class="ni ni-tv-2 mr-2"></i>Movies</a>
+                    </li>
+                    {% endif %}
+                    {% if people.getTvShows() is not empty %}
+                    <li class="nav-item">
+                        <a class="nav-link mb-sm-3 mb-md-0 {% if people.getMovies() is empty %}active{% endif %}" id="tab2" data-toggle="tab" href="#shows" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i class="ni ni-button-play mr-2"></i>TV Shows</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="tab-content" id="myTabContent">
+                {% if people.getMovies() is not empty %}
+                <div class="tab-pane fade show active" id="movies" role="tabpanel" aria-labelledby="tab1">
+                   <div class="row">
+                       {% include 'movies/display-movies.html.twig' %}
+                   </div>
+                </div>
+                {% endif %}
+                {% if people.getTvShows() is not empty %}
+                <div class="tab-pane fade {% if people.getMovies() is empty %}show active{% endif %}" id="shows" role="tabpanel" aria-labelledby="tab2">
+                    <div class="row">
+                        {% include 'series/display-series.html.twig' %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

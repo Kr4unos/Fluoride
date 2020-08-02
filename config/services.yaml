@@ -8,6 +8,7 @@ parameters:
     series_upload_folder: '%kernel.project_dir%/public/uploads/shows/'
     seasons_upload_folder: '%kernel.project_dir%/public/uploads/shows/seasons/'
     episodes_upload_folder: '%kernel.project_dir%/public/uploads/shows/episodes/'
+    people_upload_folder: '%kernel.project_dir%/public/uploads/people/'
 
 services:
     # default configuration for services in *this* file

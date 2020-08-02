@@ -2,28 +2,56 @@
 
 namespace App\Utils;
 
-use const App\Controller\TMDB_API_KEY;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TMDbWrapper
 {
-    private static $_api_key = TMDB_API_KEY;
     private static $_api_url_tmdb = 'https://api.themoviedb.org/3/';
+
     public static $api_poster_url = 'https://image.tmdb.org/t/p/original';
     public static $api_thumbnail_url = 'https://image.tmdb.org/t/p/w300';
 
-    public static function findFromImdbId($imdbID)
+    public static function findFromImdbId(string $imdbId)
     {
         $params = [
-            'api_key' => self::$_api_key,
+            'api_key' => Constants::TMDB_API_KEY,
             'language' => 'fr-FR',
             'external_source' => 'imdb_id'
         ];
 
-        $query_url = self::$_api_url_tmdb . 'find/' . $imdbID . '?' . http_build_query($params);
+        $query_url = self::$_api_url_tmdb . 'find/' . $imdbId . '?' . http_build_query($params);
         return self::search($query_url);
     }
 
-    public static function search($query)
+    public static function getTmdbIdFromImdbIdForMovie(string $imdbId)
+    {
+        $result = self::findFromImdbId($imdbId);
+
+        if(isset($result['movie_results'])
+            && !empty($result['movie_results'])
+            && isset($result['movie_results'][0]['id']))
+        {
+            return $result['movie_results'][0]['id'];
+        }
+
+        return null;
+    }
+
+    public static function getTmdbIdFromImdbIdForShow(string $imdbId)
+    {
+        $result = self::findFromImdbId($imdbId);
+
+        if(isset($result['tv_results'])
+            && !empty($result['tv_results'])
+            && isset($result['tv_results'][0]['id']))
+        {
+            return $result['tv_results'][0]['id'];
+        }
+
+        return null;
+    }
+
+    public static function search(string $query)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $query);
