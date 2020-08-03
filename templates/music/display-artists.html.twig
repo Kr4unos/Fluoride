@@ -1,0 +1,12 @@
+{% for artist in artists %}
+    <div class="col-xl-3 col-md-4 d-flex">
+        <div class="card movie-card flex-fill">
+            <a href="{{ path('music-artist', {'id': artist.getSpotifyId() }) }}">
+                <img class="card-img-top" src="{{ asset('uploads/music/artists/' ~ artist.getProfilePicture()) }}" alt="{{ artist.getName() }}" height="300px" width="100%">
+            </a>
+            <div class="card-body text-center">
+                <h4 class="title"><a href="{{ path('music-artist', {'id': artist.getSpotifyId() }) }}">{{ artist.getName() }}</a></h4>
+            </div>
+        </div>
+    </div>
+{% endfor %}

@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Artist;
+use App\Utils\Constants;
+use App\Utils\Utils;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,32 +21,53 @@ class ArtistRepository extends ServiceEntityRepository
         parent::__construct($registry, Artist::class);
     }
 
-    // /**
-    //  * @return Artist[] Returns an array of Artist objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function insertOrUpdateSpotify(object $artistApi, string $destination_path) : Artist
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        // It can take some time so enable infinite execution time
+        ini_set('max_execution_time', 0);
 
-    /*
-    public function findOneBySomeField($value): ?Artist
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $em = $this->getEntityManager();
+
+        // Check if artist already exist in our database
+        $artist = $this->findOneBy(['spotify_id' => $artistApi->id]);
+        $alreadyExist = true;
+
+        // If it's a new one, initialize it
+        if($artist == null)
+        {
+            $alreadyExist = false;
+            $artist = new Artist();
+            $fileName = Constants::DEFAULT_IMAGE_NAME;
+        }
+
+        // Poster handling
+        if(count($artistApi->images) > 0 && Utils::isNotNullOrUnknown($artistApi->images[0]->url))
+        {
+            $fileName = Utils::downloadFileTo($destination_path, $artistApi->images[0]->url);
+
+            // Prevent losing the current image if new image is not found
+            if($fileName == Constants::DEFAULT_IMAGE_NAME && Utils::isNotNullOrDefaultImage($artist->getProfilePicture()))
+                unset($fileName);
+
+            // Remove old poster if movie already exist
+            if($alreadyExist && Utils::isNotNullOrDefaultImage($artist->getProfilePicture()))
+                Utils::removeFile($destination_path . $artist->getProfilePicture());
+        }
+
+        $artist->setName($artistApi->name)
+            ->setPopularity($artistApi->popularity)
+            ->setGenres(implode(", ", $artistApi->genres))
+            ->setArtistType($artistApi->type)
+            ->setSpotifyId($artistApi->id);
+
+        if(isset($fileName))
+            $artist->setProfilePicture($fileName);
+
+        if(!$alreadyExist)
+            $em->persist($artist);
+
+        $em->flush();
+
+        return $artist;
     }
-    */
 }

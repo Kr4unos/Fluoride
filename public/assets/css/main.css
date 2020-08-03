@@ -8,3 +8,7 @@
     cursor: pointer;
     color: #27476e;
 }
+
+.table-tracks td {
+    padding: 0.5rem;
+}
