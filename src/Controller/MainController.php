@@ -26,7 +26,7 @@ class MainController extends AbstractController
         // Main stats
         $totalMovies = $em->getRepository(Movie::class)->createQueryBuilder('m')->select('count(m.id)')->getQuery()->getSingleScalarResult();
         $totalShows = $em->getRepository(TVShow::class)->createQueryBuilder('s')->select('count(s.id)')->getQuery()->getSingleScalarResult();
-        $totalPeoples = $em->getRepository(\App\Entity\People::class)->createQueryBuilder('p')->select('count(p.id)')->getQuery()->getSingleScalarResult();
+        $totalPeoples = $em->getRepository(People::class)->createQueryBuilder('p')->select('count(p.id)')->getQuery()->getSingleScalarResult();
 
         // Secondary stats
         $seenMovies = $em->getRepository(Movie::class)->createQueryBuilder('m')->select('count(m.id)')->where('m.seen = 1')->getQuery()->getSingleScalarResult();
@@ -99,26 +99,6 @@ class MainController extends AbstractController
             ]);
         }
         throw new NotFoundHttpException();
-    }
-
-    /**
-     * @Route("/doomsday", name="doomsday")
-     */
-    public function doomsday()
-    {
-        foreach($this->getDoctrine()->getRepository(TVShow::class)->findAll() AS $tvShow)
-        {
-            foreach(explode(", ", $tvShow->getWriter()) AS $writer)
-            {
-                $people = $this->getDoctrine()->getRepository(People::class)->insertOrUpdate($writer, $this->getParameter('people_upload_folder'));
-                if($people != null && !$tvShow->getPeoples()->contains($people))
-                {
-                    $tvShow->addPeople($people);
-                    var_dump("Added " . $people->getName() . " to " . $tvShow->getName());
-                }
-
-            }
-        }
     }
 }
 

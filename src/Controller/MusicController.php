@@ -29,7 +29,7 @@ class MusicController extends AbstractController
 
     /**
      * @Route("/music/artists/{id}", name="music-artist")
-     * @param string $spotifyArtistId
+     * @param string $id
      * @return Response
      */
     public function artist(string $id)

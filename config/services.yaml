@@ -8,7 +8,7 @@ parameters:
     series_upload_folder: '%kernel.project_dir%/public/uploads/shows/'
     seasons_upload_folder: '%kernel.project_dir%/public/uploads/shows/seasons/'
     episodes_upload_folder: '%kernel.project_dir%/public/uploads/shows/episodes/'
-    people_upload_folder: '%kernel.project_dir%/public/uploads/people/'
+    peoples_upload_folder: '%kernel.project_dir%/public/uploads/peoples/'
     artists_upload_folder: '%kernel.project_dir%/public/uploads/music/artists/'
     albums_upload_folder: '%kernel.project_dir%/public/uploads/music/albums/'
 

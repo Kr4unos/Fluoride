@@ -3,7 +3,7 @@
 {% block body %}
     <div class="row py-7">
         <div class="col-xl-3">
-            <img class="img-thumbnail"  src="{{ asset('uploads/people/' ~ people.getProfile()) }}" alt="{{ people.getName() }}" height="400px" width="100%">
+            <img class="img-thumbnail"  src="{{ asset('uploads/peoples/' ~ people.getProfile()) }}" alt="{{ people.getName() }}" height="400px" width="100%">
             <p class="small text-center"><a target="_blank" href="https://www.imdb.com/name/{{ people.getImdbId() }}/">View on IMDB</a></p>
             <table class="table table-hover text-center">
                 <tr>
