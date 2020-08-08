@@ -55,7 +55,7 @@ class MovieController extends AbstractController
             ->insertOrUpdate(
                 $imdbId,
                 $this->getParameter('movies_upload_folder'),
-                $this->getParameter('people_upload_folder')
+                $this->getParameter('peoples_upload_folder')
             );
 
         return $this->redirectToRoute('movie', ['id' => $movie->getId()]);

@@ -61,7 +61,7 @@ class TVShowController extends AbstractController
                 $this->getParameter('series_upload_folder'),
                 $this->getParameter('seasons_upload_folder'),
                 $this->getParameter('episodes_upload_folder'),
-                $this->getParameter('people_upload_folder')
+                $this->getParameter('peoples_upload_folder')
             );
 
         return $this->redirectToRoute('show', ['id' => $tvShow->getId()]);
