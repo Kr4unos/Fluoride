@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\People;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,5 +40,21 @@ class PeopleController extends AbstractController
             'movies' => $people->getMovies(),
             'shows' => $people->getTvShows()
         ]);
+    }
+
+    /**
+     * @param string $name
+     * @Route("/peoples/add/{name}", name="addPeople")
+     * @return RedirectResponse
+     */
+    public function addPeople(string $name)
+    {
+        $people = $this->getDoctrine()->getRepository(People::class)
+            ->insertOrUpdate($name, $this->getParameter('peoples_upload_folder'));
+
+        if($people == null)
+            throw new NotFoundHttpException();
+
+        return $this->redirectToRoute('people', ['id' => $people->getId()]);
     }
 }
